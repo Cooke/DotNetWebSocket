@@ -26,12 +26,12 @@ namespace Cooke.WebSocket
 
     public class HandshakeCompletedEventArgs : EventArgs
     {
-        public HandshakeCompletedEventArgs(WebSocket socket)
+        public HandshakeCompletedEventArgs(WebSocketSession socketSession)
         {
-            WebSocket = socket;
+            WebSocketSession = socketSession;
         }
 
-        public WebSocket WebSocket { get; private set; }
+        public WebSocketSession WebSocketSession { get; private set; }
     }    
 
     public class WebSocketListener
@@ -64,6 +64,11 @@ namespace Cooke.WebSocket
         public void Stop()
         {
             listener.Stop();
+        }
+
+        public void Dispose()
+        {
+            Stop();
         }
 
         private void HandleAcceptSocket(IAsyncResult ar)

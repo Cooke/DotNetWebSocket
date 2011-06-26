@@ -33,13 +33,13 @@ namespace WebSocketsTest
 
         static void SendMessageFinished(IAsyncResult ar)
         {
-            var webSocket = (WebSocket)ar.AsyncState;            
+            var webSocket = (WebSocketSession)ar.AsyncState;            
             webSocket.EndSendMessage(ar);   
         }
 
         static void ReceiveMessageFinished(IAsyncResult ar)
         {
-            var webSocket = (WebSocket)ar.AsyncState;
+            var webSocket = (WebSocketSession)ar.AsyncState;
             var receiveMessage = webSocket.EndReceiveMessage(ar);
             webSocket.BeginReceiveMessage(ReceiveMessageFinished, webSocket);
             webSocket.BeginSendMessage("ECHO: " + receiveMessage, SendMessageFinished, webSocket);

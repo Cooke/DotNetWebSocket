@@ -92,7 +92,7 @@ namespace Cooke.WebSocket
             // Create new handshake state object to handle the handshake process
             var handshakeState = new HandshakeState
             {
-                webSocketAsyncResult = new AsyncResult<WebSocket>(asyncCallback, state),
+                webSocketAsyncResult = new AsyncResult<WebSocketSession>(asyncCallback, state),
                 socket = socket,
                 timeoutAt = DateTime.Now.AddMilliseconds(timeout)
             };
@@ -117,9 +117,9 @@ namespace Cooke.WebSocket
             return handshakeState.webSocketAsyncResult;
         }
 
-        public WebSocket EndHandshake(IAsyncResult asyncResult)
+        public WebSocketSession EndHandshake(IAsyncResult asyncResult)
         {
-            return ((AsyncResult<WebSocket>)asyncResult).EndInvoke();
+            return ((AsyncResult<WebSocketSession>)asyncResult).EndInvoke();
         }
 
         private void ClientHandshakeCallback(IAsyncResult ar)
@@ -179,7 +179,7 @@ namespace Cooke.WebSocket
 
                     if (finished == 0)
                     {
-                        handshakeState.webSocketAsyncResult.SetCompleted(new WebSocket(handshakeState.socket, handshakeState.inputBuffer, handshakeState.outputBuffer), false);
+                        handshakeState.webSocketAsyncResult.SetCompleted(new WebSocketSession(handshakeState.socket, handshakeState.inputBuffer, handshakeState.outputBuffer), false);
                     }
                     else
                     {

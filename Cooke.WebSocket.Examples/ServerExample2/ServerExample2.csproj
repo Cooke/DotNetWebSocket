@@ -47,7 +47,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\WebSockets\Cooke.WebSocket.csproj">
+    <ProjectReference Include="..\..\Cooke.WebSocket\Cooke.WebSocket.csproj">
       <Project>{CB78A38D-9F81-430F-A571-C2E64E046AFF}</Project>
       <Name>Cooke.WebSocket</Name>
     </ProjectReference>

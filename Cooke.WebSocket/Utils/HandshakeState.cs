@@ -17,7 +17,7 @@ namespace Cooke.WebSocket.Utils
             Finished
         }
 
-        internal AsyncResult<WebSocket> webSocketAsyncResult;
+        internal AsyncResult<WebSocketSession> webSocketAsyncResult;
         internal Socket socket;
         internal byte[] inputBuffer = new byte[10 * 1024];
         internal byte[] outputBuffer = new byte[10 * 1024];

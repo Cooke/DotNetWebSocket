@@ -76,15 +76,21 @@ namespace Cooke.WebSocket.Utils
             completedSynchronously = completedSynch;
 
             if (isCompleted)
+            {
                 throw new InvalidOperationException("SetCompleted can only be called once");
+            }
 
             isCompleted = true;
 
             if (asyncWaitHandle != null)
+            {
                 asyncWaitHandle.Set();
+            }
 
             if (asyncCallback != null)
+            {
                 asyncCallback(this);
+            }
         }
 
         public void EndInvoke()
@@ -97,7 +103,9 @@ namespace Cooke.WebSocket.Utils
             }
 
             if (exception != null)
+            {
                 throw exception;
+            }
         }
     }
 }

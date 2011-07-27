@@ -46,7 +46,7 @@
     <Compile Include="Utils\HandshakeState.cs" />
     <Compile Include="WebSocketHandshakeManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="WebSocket.cs" />
+    <Compile Include="WebSocketSession.cs" />
     <Compile Include="WebSocketListener.cs" />
   </ItemGroup>
   <ItemGroup>

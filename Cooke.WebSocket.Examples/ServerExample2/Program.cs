@@ -10,7 +10,7 @@ namespace Example2
     class Program
     {
         private static WebSocketHandshakeManager handshaker = new WebSocketHandshakeManager();
-        private static List<WebSocket> sockets = new List<WebSocket>();
+        private static List<WebSocketSession> sockets = new List<WebSocketSession>();
         private static TcpListener listener = new TcpListener(IPAddress.Any, 8181);
         private static object socketsLock = new object();
 
@@ -52,7 +52,7 @@ namespace Example2
 
         private static void SendCallback(IAsyncResult ar)
         {
-            var socket = (WebSocket)ar.AsyncState;
+            var socket = (WebSocketSession)ar.AsyncState;
 
             try
             {
@@ -87,18 +87,18 @@ namespace Example2
 
         private static void HandshakeCallback(IAsyncResult ar)
         {
-            WebSocket socket = null;
+            WebSocketSession socketSession = null;
             try
             {
-                socket = handshaker.EndHandshake(ar);
+                socketSession = handshaker.EndHandshake(ar);
 
                 lock (socketsLock)
                 {
-                    sockets.Add(socket);
+                    sockets.Add(socketSession);
                 }
 
                 Console.WriteLine("Handshake completed.");
-                socket.BeginReceiveMessage(ReceiveCallback, socket);
+                socketSession.BeginReceiveMessage(ReceiveCallback, socketSession);
             }                
             catch (Exception ex)
             {
@@ -111,11 +111,11 @@ namespace Example2
                         "Timeout exception will happen when a websocket client compatible to version 75 tries to connect to a web socket server compatible to version 76 (which this server is).");
                 }
 
-                if (socket != null)
+                if (socketSession != null)
                 {
                     lock (socketsLock)
                     {
-                        sockets.Remove(socket);
+                        sockets.Remove(socketSession);
                     }
                 }
             }
@@ -123,7 +123,7 @@ namespace Example2
 
         private static void ReceiveCallback(IAsyncResult ar)
         {
-            var socket = (WebSocket)ar.AsyncState;
+            var socket = (WebSocketSession)ar.AsyncState;
             try
             {
                 var clientMessage = socket.EndReceiveMessage(ar);

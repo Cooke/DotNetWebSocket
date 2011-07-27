@@ -17,7 +17,7 @@ namespace Cooke.WebSocket.Utils
             Finished
         }
 
-        internal AsyncResult<WebSocket> webSocketAsyncResult;
+        internal AsyncResult<WebSocketSession> webSocketAsyncResult;
         internal Socket socket;
         internal byte[] inputBuffer = new byte[10 * 1024];
         internal byte[] outputBuffer = new byte[10 * 1024];
@@ -106,6 +106,11 @@ namespace Cooke.WebSocket.Utils
 
                                     // Add received field to handshake state
                                     fields.Add(split[0], split[1]);
+                                    if (split[0] == "Cookie")
+                                    {
+                                        Cookies = CreateCookies(split[1]);
+                                    }
+
                                     clientHandshakeParsed = i + 2;
                                     break;
                                 }
@@ -127,6 +132,24 @@ namespace Cooke.WebSocket.Utils
                         break;
                 }
             }
+        }
+
+        public IDictionary<string, string> Cookies { get; private set; }
+
+        private static IDictionary<string, string> CreateCookies(string field)
+        {
+            var cookieKeyValuePairs = field.Split(';');
+
+            var cookies = new Dictionary<string, string>();
+            foreach (var cookieKeyValuePair in cookieKeyValuePairs)
+            {
+                var keyValueArray = cookieKeyValuePair.Split('=');
+                var key = keyValueArray[0].TrimStart();
+                var value = keyValueArray[1];
+                cookies.Add(key, value);
+            }
+
+            return cookies;
         }
     }
 }

@@ -26,19 +26,19 @@ namespace Cooke.WebSocket
 
     public class HandshakeCompletedEventArgs : EventArgs
     {
-        public HandshakeCompletedEventArgs(WebSocket socket)
+        public HandshakeCompletedEventArgs(WebSocketSession socketSession)
         {
-            WebSocket = socket;
+            WebSocketSession = socketSession;
         }
 
-        public WebSocket WebSocket { get; private set; }
+        public WebSocketSession WebSocketSession { get; private set; }
     }    
 
-    public class WebSocketListener
+    public class WebSocketListener : IDisposable
     {
-        private WebSocketHandshakeManager handshaker = new WebSocketHandshakeManager();
-        private TcpListener listener;
-        private int simultaniousHandshakes;
+        private readonly WebSocketHandshakeManager handshaker = new WebSocketHandshakeManager();
+        private readonly TcpListener listener;
+        private readonly int simultaniousHandshakes;
 
         public event EventHandler<HandshakeCompletedEventArgs> HandshakeCompleted;
         public event EventHandler<HandshakeUpdatedEventArgs> SocketAccepted;
@@ -101,9 +101,10 @@ namespace Cooke.WebSocket
             {
                 var webSocket = handshaker.EndHandshake(ar);
 
-                if (HandshakeCompleted != null)
+                EventHandler<HandshakeCompletedEventArgs> handshakeCompleted = HandshakeCompleted;
+                if (handshakeCompleted != null)
                 {
-                    HandshakeCompleted(this, new HandshakeCompletedEventArgs(webSocket));
+                    handshakeCompleted(this, new HandshakeCompletedEventArgs(webSocket));
                 }
             }
             //catch (TimeoutException)
@@ -112,11 +113,17 @@ namespace Cooke.WebSocket
             //}
             catch (Exception)
             {
-                if (HandshakeFailed != null)
+                EventHandler<HandshakeUpdatedEventArgs> handshakeFailed = HandshakeFailed;
+                if (handshakeFailed != null)
                 {
-                    HandshakeFailed(this, new HandshakeUpdatedEventArgs((IPEndPoint)socket.RemoteEndPoint));
+                    handshakeFailed(this, new HandshakeUpdatedEventArgs((IPEndPoint)socket.RemoteEndPoint));
                 }
             }
+        }
+
+        public void Dispose()
+        {
+            listener.Stop();
         }
     }
 }

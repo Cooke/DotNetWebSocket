@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Net.Sockets;
 using System.IO;
-using System.Threading;
+using System.Linq;
+using System.Net.Sockets;
 using System.Security.Cryptography;
+using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
+
 using Cooke.WebSocket.Utils;
 
 namespace Cooke.WebSocket
@@ -67,7 +68,12 @@ namespace Cooke.WebSocket
 
         public WebSocketHandshakeManager()
         {
-            InitializeMembers(new Regex(""), new Regex(""), new Regex(""));
+            InitializeMembers(new Regex(string.Empty), new Regex(string.Empty), new Regex(string.Empty));
+        }
+
+        public int Timeout
+        {
+            get { return timeout; }
         }
 
         private void InitializeMembers(Regex origin, Regex hostname, Regex resource)
@@ -82,17 +88,12 @@ namespace Cooke.WebSocket
             timeout = 5000;
         }
 
-        public int Timeout
-        {
-            get { return timeout; }
-        }
-
         public IAsyncResult BeginHandshake(Socket socket, AsyncCallback asyncCallback, object state)
         {
             // Create new handshake state object to handle the handshake process
             var handshakeState = new HandshakeState
             {
-                webSocketAsyncResult = new AsyncResult<WebSocket>(asyncCallback, state),
+                webSocketAsyncResult = new AsyncResult<WebSocketSession>(asyncCallback, state),
                 socket = socket,
                 timeoutAt = DateTime.Now.AddMilliseconds(timeout)
             };
@@ -117,9 +118,9 @@ namespace Cooke.WebSocket
             return handshakeState.webSocketAsyncResult;
         }
 
-        public WebSocket EndHandshake(IAsyncResult asyncResult)
+        public WebSocketSession EndHandshake(IAsyncResult asyncResult)
         {
-            return ((AsyncResult<WebSocket>)asyncResult).EndInvoke();
+            return ((AsyncResult<WebSocketSession>)asyncResult).EndInvoke();
         }
 
         private void ClientHandshakeCallback(IAsyncResult ar)
@@ -179,7 +180,8 @@ namespace Cooke.WebSocket
 
                     if (finished == 0)
                     {
-                        handshakeState.webSocketAsyncResult.SetCompleted(new WebSocket(handshakeState.socket, handshakeState.inputBuffer, handshakeState.outputBuffer), false);
+                        var webSocketSession = new WebSocketSession(handshakeState.socket, handshakeState.inputBuffer, handshakeState.outputBuffer, handshakeState.Cookies, handshakeState.resource);
+                        handshakeState.webSocketAsyncResult.SetCompleted(webSocketSession, false);
                     }
                     else
                     {
@@ -332,14 +334,14 @@ namespace Cooke.WebSocket
 
             var response = md5.ComputeHash(challange);
 
-            MemoryStream memStream = new MemoryStream(handshakeState.outputBuffer, true);
-            StreamWriter writer = new StreamWriter(memStream);
+            var memStream = new MemoryStream(handshakeState.outputBuffer, true);
+            var writer = new StreamWriter(memStream);
             writer.WriteLine("HTTP/1.1 101 WebSocket Protocol Handshake");
             writer.WriteLine("Upgrade: WebSocket");
             writer.WriteLine("Connection: Upgrade");
             writer.WriteLine("Sec-WebSocket-Origin: {0}", origin);
             writer.WriteLine("Sec-WebSocket-Location: ws://{0}{1}", hostname, resource);
-            writer.WriteLine("");
+            writer.WriteLine(string.Empty);
             writer.Flush();
             memStream.Write(response, 0, response.Length);
             handshakeState.serverHandshakeSize = (int)memStream.Position;

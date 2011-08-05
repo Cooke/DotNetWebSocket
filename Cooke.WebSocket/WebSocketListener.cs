@@ -66,6 +66,11 @@ namespace Cooke.WebSocket
             listener.Stop();
         }
 
+        public void Dispose()
+        {
+            Stop();
+        }
+
         private void HandleAcceptSocket(IAsyncResult ar)
         {
             try
@@ -119,11 +124,6 @@ namespace Cooke.WebSocket
                     handshakeFailed(this, new HandshakeUpdatedEventArgs((IPEndPoint)socket.RemoteEndPoint));
                 }
             }
-        }
-
-        public void Dispose()
-        {
-            listener.Stop();
         }
     }
 }

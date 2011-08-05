@@ -8,12 +8,12 @@ namespace Cooke.WebSocket
 {
     public class WebSocketSession : IDisposable
     {
-        private readonly Queue<string> result;
         private byte[] inputBuffer;
         private byte[] outputBuffer;
         private int inputBufferOffset;
         private int outputBufferOffset;
         private int outputBufferEndOffset;        
+        private Queue<string> result;
 
         public WebSocketSession(Socket socket)
         {
@@ -230,52 +230,10 @@ namespace Cooke.WebSocket
             outputBufferEndOffset = bytes + 2;
         }
 
-        /*
-        public IAsyncResult BeginClose(AsyncCallback asyncCallback, object state)
-        {
-            var asyncResult = new AsyncResultNoReturnValue(asyncCallback, state);
-
-            try
-            {
-                Socket.BeginSend(new byte[] { 0xFF, 0x00 }, 0, 2, SocketFlags.None, HandleSendShutdownMessage, asyncResult);
-            }
-            catch (Exception ex)
-            {
-                asyncResult.SetCompleted(ex, true);
-            }
-
-            return asyncResult;
-        }
-
-        public void EndClose(IAsyncResult asyncResult)
-        {
-            var asyncResultNoReturnValue = (AsyncResultNoReturnValue)asyncResult;
-            asyncResultNoReturnValue.EndInvoke();
-        }
-
-        private void HandleSendShutdownMessage(IAsyncResult ar)
-        {
-            var asyncResult = (AsyncResultNoReturnValue)ar.AsyncState;
-
-            try
-            {
-                Socket.EndSend(ar);
-                Socket.Shutdown(SocketShutdown.Send);                
-
-                asyncResult.SetCompleted(null, false);
-            }
-            catch (Exception ex)
-            {
-                asyncResult.SetCompleted(ex, false);
-            }
-        }
-        
-
         public void Close()
         {
             Dispose();
         }
-        */
 
         public void Dispose()
         {

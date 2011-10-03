@@ -19,28 +19,19 @@ namespace Example2
         private static void HandleNewConnection(object sender, EventArgs eventArgs)
         {
             var newWebSocket = Server.GetNewClientOrDefault();
-
-            newWebSocket.BeginSendMessage("Welcome to this simple web socket server!", HandleSendMessageCompleted, newWebSocket);
-            newWebSocket.BeginReceiveMessage(HandleReceiveMessageCompleted, newWebSocket);
+            newWebSocket.SendMessage("Welcome to this simple web socket server!");
+            newWebSocket.NewMessagesAvailable += HandleNewMessage;
 
             Console.WriteLine("New connection");
         }
 
-        private static void HandleReceiveMessageCompleted(IAsyncResult ar)
+        private static void HandleNewMessage(object sender, EventArgs e)
         {
-            var webSocketSession = (WebSocket)ar.AsyncState;
-            string receivedMessage = webSocketSession.EndReceiveMessage(ar);
+            var webSocketClient = (IWebSocketClient)sender;
+            string receivedMessage = webSocketClient.GetNewMessageOrDefault();            
+            webSocketClient.SendMessage("Echo: " + receivedMessage);
 
             Console.WriteLine("Received message: {0}", receivedMessage);
-            webSocketSession.BeginSendMessage("Echo: " + receivedMessage, HandleSendMessageCompleted, webSocketSession);
-
-            webSocketSession.BeginReceiveMessage(HandleReceiveMessageCompleted, webSocketSession);
-        }
-
-        private static void HandleSendMessageCompleted(IAsyncResult ar)
-        {
-            var webSocketSession = (WebSocket)ar.AsyncState;
-            webSocketSession.EndSendMessage(ar);
         }
     }
 }

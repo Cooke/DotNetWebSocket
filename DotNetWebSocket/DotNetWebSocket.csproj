@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{CB78A38D-9F81-430F-A571-C2E64E046AFF}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DotNetWebSocket</RootNamespace>
+    <AssemblyName>DotNetWebSocket</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Collections\FieldCollection.cs" />
+    <Compile Include="Collections\IFieldCollection.cs" />
+    <Compile Include="IRequest.cs" />
+    <Compile Include="IWebSocket.cs" />
+    <Compile Include="IWebSocketClient.cs" />
+    <Compile Include="IWebSocketListener.cs" />
+    <Compile Include="IWebSocketServer.cs" />
+    <Compile Include="Request.cs" />
+    <Compile Include="Utils\BitReader.cs" />
+    <Compile Include="Utils\AsyncResultSyncCompletionTracking.cs" />
+    <Compile Include="Utils\SimpleLock.cs" />
+    <Compile Include="WebSocketClient.cs" />
+    <Compile Include="WebSocketListener.cs" />
+    <Compile Include="WebSocketException.cs" />
+    <Compile Include="Utils\BitWriter.cs" />
+    <Compile Include="Handshaking\ClientHandshake.cs" />
+    <Compile Include="HandshakeException.cs" />
+    <Compile Include="Handshaking\ClientHandshakeReceiver.cs" />
+    <Compile Include="Framing\DataFrame.cs" />
+    <Compile Include="Handshaking\HandshakeHandler.cs" />
+    <Compile Include="Handshaking\ServerHandshake.cs" />
+    <Compile Include="Handshaking\ServerHandshakeSender.cs" />
+    <Compile Include="UnhandledExceptionEventArgs.cs" />
+    <Compile Include="Utils\AsyncResult.cs" />
+    <Compile Include="Utils\AsyncResultNoReturnValue.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WebSocket.cs" />
+    <Compile Include="WebSocketServer.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="MIT-LICENSE.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

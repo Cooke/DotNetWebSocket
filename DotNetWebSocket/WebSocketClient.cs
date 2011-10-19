@@ -36,6 +36,11 @@ namespace DotNetWebSocket
             get { return webSocket.Request; }
         }
 
+        public IWebSocket WebSocket
+        {
+            get { return webSocket; }
+        }
+
         public void Dispose()
         {
             webSocket.Dispose();
@@ -77,6 +82,11 @@ namespace DotNetWebSocket
             return newClients ?? Enumerable.Empty<string>();
         }
 
+        public void Abort()
+        {
+            webSocket.Abort();
+        }
+
         private void ProcessOutgoingMessages()
         {
             while (outgoingMessages.Count > 0 && !sendLock.Locked)
@@ -98,7 +108,15 @@ namespace DotNetWebSocket
 
         private void SendMessageInternal(string message)
         {
-            webSocket.BeginSendMessage(message, HandleSendMessageCompleted, null);
+            try
+            {
+                webSocket.BeginSendMessage(message, HandleSendMessageCompleted, null);
+            }
+            catch (Exception)
+            {
+                webSocket.Abort();
+                OnConnectionAborted();
+            }       
         }
 
         private void HandleSendMessageCompleted(IAsyncResult ar)

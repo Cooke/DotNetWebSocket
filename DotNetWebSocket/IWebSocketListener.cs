@@ -13,7 +13,7 @@ namespace DotNetWebSocket
 
         void Stop();
 
-        IEnumerable<IWebSocketClient> GetNewWebSocketClients();
+        IEnumerable<IWebSocketClient> GetNewClients();
 
         IWebSocketClient GetNewClientOrDefault();
     }

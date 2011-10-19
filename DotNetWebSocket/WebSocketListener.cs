@@ -45,7 +45,7 @@ namespace DotNetWebSocket
             return new WebSocketClient(webSocket);
         }
 
-        public IEnumerable<IWebSocketClient> GetNewWebSocketClients()
+        public IEnumerable<IWebSocketClient> GetNewClients()
         {
             List<IWebSocketClient> newClients = null;
 

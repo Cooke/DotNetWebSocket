@@ -61,20 +61,22 @@ namespace DotNetWebSocket
 
         public void Close()
         {
+            socket.Shutdown(SocketShutdown.Both);
+            socket.Close(0);
+            receiveBuffer = null;
+            outputBuffer = null;
             Dispose();
         }
 
         public void Dispose()
         {
-            // TODO better closing meachanism is needed when the WebSocket API has matured
-            socket.Close(0);
-            receiveBuffer = null;
-            outputBuffer = null;
+            socket.Dispose();
         }
 
         public void Abort()
         {
             socket.Close(0);
+            Dispose();
         }
 
         public IAsyncResult BeginSendMessage(string message, AsyncCallback asyncCallback, object state)

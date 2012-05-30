@@ -126,7 +126,7 @@ namespace DotNetWebSocket.Framing
             bitStream.WriteBits((int)OpCode.Text, 4);
 
             // Should mask
-            bitStream.WriteBit(1);
+            bitStream.WriteBit(0);
 
             // Payload length
             if (payloadLength < 126)
@@ -157,11 +157,11 @@ namespace DotNetWebSocket.Framing
             }
 
             // Create mask value
-            var mask = new byte[4];
-            Random.NextBytes(mask);
+            //var mask = new byte[4];
+            //Random.NextBytes(mask);
             
-            // Write mask
-            bitStream.WriteBytes(mask);
+            //// Write mask
+            //bitStream.WriteBytes(mask);
 
             Debug.Assert(bitStream.IsByteAligned, "Data frame header must occupy an even number of bytes");
 
@@ -171,7 +171,8 @@ namespace DotNetWebSocket.Framing
             // Mask payload
             for (int i = 0; i < payloadLength; i++)
             {
-                buffer[i + headerLength] = (byte)(buffer[i + headerLength] ^ mask[i % 4]);
+                // buffer[i + headerLength] = (byte)(buffer[i + headerLength] ^ mask[i % 4]);
+                buffer[i + headerLength] = buffer[i + headerLength];
             }
 
             frameSize = headerLength + payloadLength;

@@ -32,7 +32,7 @@ namespace DotNetWebSocket.Handshaking
                 host = allFields["host"];
                 upgrade = allFields["upgrade"];
                 connection = allFields["connection"];
-                allFields.TryGetValue("sec-websocket-origin", out origin);
+                allFields.TryGetValue("origin", out origin);
                 version = int.Parse(allFields["sec-websocket-version"]);
             }
             catch (Exception ex)

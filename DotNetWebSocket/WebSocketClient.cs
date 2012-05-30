@@ -66,20 +66,20 @@ namespace DotNetWebSocket
 
         public IEnumerable<string> GetNewMessages()
         {
-            List<string> newClients = null;
+            List<string> newMessages = null;
 
-            string socketSession;
-            while (incomingMessages.TryDequeue(out socketSession))
+            string message;
+            while (incomingMessages.TryDequeue(out message))
             {
-                if (newClients == null)
+                if (newMessages == null)
                 {
-                    newClients = new List<string>();
+                    newMessages = new List<string>();
                 }
 
-                newClients.Add(socketSession);
+                newMessages.Add(message);
             }
 
-            return newClients ?? Enumerable.Empty<string>();
+            return newMessages ?? Enumerable.Empty<string>();
         }
 
         public void Abort()
@@ -141,6 +141,7 @@ namespace DotNetWebSocket
                 string message = webSocket.EndReceiveMessage(ar);
                 if (message == null)
                 {
+                    webSocket.Close();
                     OnConnectionClosed();
                 }
                 else
